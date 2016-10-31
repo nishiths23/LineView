@@ -1,0 +1,6 @@
+framework module LineView {
+  umbrella header "LineView-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,16 @@
+PODS:
+  - LineView (0.1.0)
+
+DEPENDENCIES:
+  - LineView (from `../`)
+
+EXTERNAL SOURCES:
+  LineView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  LineView: c1bad9fd3b83ed6c79dc900b4e381fe6fc69bdbd
+
+PODFILE CHECKSUM: 1e28f8282b1a700c9235f5272c445f2d777fb325
+
+COCOAPODS: 1.1.0.rc.3

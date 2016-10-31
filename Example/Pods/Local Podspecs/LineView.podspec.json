@@ -1,0 +1,22 @@
+{
+  "name": "LineView",
+  "version": "0.1.0",
+  "summary": "Swift version of SmoothLineView.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/nishiths23/LineView",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Nishith Singh": "nishithsingh23@ymail.com"
+  },
+  "source": {
+    "git": "https://github.com/nishiths23/LineView.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "LineView/Classes/**/*"
+}
