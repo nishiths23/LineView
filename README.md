@@ -22,7 +22,7 @@ pod "LineView"
 
 ## Author
 
-Nishith Singh, nishith.singh@stash.bms.biz
+Nishith Singh, nishithsingh23@ymail.com
 
 ## License
 
