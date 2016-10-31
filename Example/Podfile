@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'LineView_Example' do
+  pod 'LineView', :path => '../'
+
+  target 'LineView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
