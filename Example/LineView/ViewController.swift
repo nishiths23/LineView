@@ -84,5 +84,8 @@ extension ViewController : LineViewDelegate {
     func setRedoButtonEnable(enabled:Bool){
         redoButton.isEnabled = enabled
     }
+    func savedToFile(URL: URL) {
+        
+    }
 }
 

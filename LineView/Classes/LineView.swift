@@ -14,6 +14,7 @@ public protocol LineViewDelegate {
     func setSave2FileButtonEnable(enabled:Bool)
     func setSave2AlbumButtonEnable(enabled:Bool)
     func setRedoButtonEnable(enabled:Bool)
+    func savedToFile(URL:URL)
 }
 
 
@@ -378,6 +379,7 @@ public class LineView : UIView {
             return
         }
         showError(with: "Success", andMessage: "File saved", onController: controller)
+        delegate?.savedToFile(URL: URL(fileURLWithPath:pngPath))
     }
     
     
