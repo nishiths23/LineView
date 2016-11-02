@@ -184,10 +184,26 @@ public class LineView : UIView {
     }
     
     override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        UIGraphicsBeginImageContext(self.bounds.size);
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        curImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext();
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+            curImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            if #available(iOS 10, *){
+                let format = UIGraphicsImageRendererFormat()
+                let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+                curImage = renderer.image() { (context) in
+                    self.layer.render(in: context.cgContext)
+                }
+            }else{
+                UIGraphicsBeginImageContext(self.bounds.size);
+                self.layer.render(in: UIGraphicsGetCurrentContext()!)
+                curImage = UIGraphicsGetImageFromCurrentImageContext()!
+                UIGraphicsEndImageContext()
+            }
+        }
         if PUSHTOFILE{
             lineIndex += 1
             DispatchQueue.global(qos:.background).async { self.writeFilesBG() }
@@ -250,20 +266,37 @@ public class LineView : UIView {
         drawBox.origin.y -= self.lineWidth * 1
         drawBox.size.width += self.lineWidth * 2
         drawBox.size.height += self.lineWidth * 2
-        UIGraphicsBeginImageContext(drawBox.size)
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        curImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: drawBox.size, format: format)
+            curImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            UIGraphicsBeginImageContext(drawBox.size)
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
+            curImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+        }
         self.setNeedsDisplay(drawBox)
         RunLoop.current.run(mode: RunLoopMode.commonModes, before: Date())
     }
 
     fileprivate func writeFilesBG() {
         let pngPath = "\(NSTemporaryDirectory())WB/\(lineIndex).png"
-        UIGraphicsBeginImageContext(self.bounds.size);
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let saveImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        var saveImage : UIImage?
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+            saveImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            UIGraphicsBeginImageContext(self.bounds.size);
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
+            saveImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
         do{
             try UIImagePNGRepresentation(saveImage!)?.write(to:URL(fileURLWithPath:pngPath), options: .atomicWrite)
         }catch{
@@ -333,10 +366,18 @@ public class LineView : UIView {
 
     public func clearButtonClicked()
     {
-        UIGraphicsBeginImageContext(self.bounds.size);
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        curImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext();
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+            curImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            UIGraphicsBeginImageContext(self.bounds.size);
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
+            curImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+        }
         drawStep = .clear
         setNeedsDisplay(self.bounds)
         if PUSHTOFILE{
@@ -368,10 +409,19 @@ public class LineView : UIView {
         let dateString = dateFormat.string(from: Date())
         
         let pngPath = "\(NSTemporaryDirectory())Screenshot_\(dateString).png"
-        UIGraphicsBeginImageContext(self.bounds.size);
-        self.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let saveImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        var saveImage : UIImage?
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+            saveImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            UIGraphicsBeginImageContext(self.bounds.size);
+            self.layer.render(in: UIGraphicsGetCurrentContext()!)
+            saveImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
         do{
             try UIImagePNGRepresentation(saveImage!)?.write(to: URL(fileURLWithPath:pngPath), options: .atomic)
         } catch {
@@ -384,10 +434,19 @@ public class LineView : UIView {
     
     
     public func save2AlbumButtonClicked() {
-        UIGraphicsBeginImageContext(self.bounds.size);
-        self.layer.render(in:UIGraphicsGetCurrentContext()!)
-        let saveImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        var saveImage : UIImage?
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: self.bounds.size, format: format)
+            saveImage = renderer.image() { (context) in
+                self.layer.render(in: context.cgContext)
+            }
+        }else{
+            UIGraphicsBeginImageContext(self.bounds.size);
+            self.layer.render(in:UIGraphicsGetCurrentContext()!)
+            saveImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
         UIImageWriteToSavedPhotosAlbum(saveImage!, self, nil, nil)
     }
     
@@ -425,12 +484,22 @@ public class LineView : UIView {
 
 extension UIImage{
     fileprivate func imageRotated(byDegrees:CGFloat) -> UIImage{
-        UIGraphicsBeginImageContext(size)
-        let context = UIGraphicsGetCurrentContext()!
-        context.rotate(by: byDegrees.toRadians())
-        draw(at: CGPoint(x: 0, y: 0))
-        let image = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
+        var image : UIImage!
+        if #available(iOS 10, *){
+            let format = UIGraphicsImageRendererFormat()
+            let renderer = UIGraphicsImageRenderer(size: size, format: format)
+            image = renderer.image() { (context) in
+                context.cgContext.rotate(by: byDegrees.toRadians())
+                draw(at: CGPoint(x: 0, y: 0))
+            }
+        }else{
+            UIGraphicsBeginImageContext(size)
+            let context = UIGraphicsGetCurrentContext()!
+            context.rotate(by: byDegrees.toRadians())
+            draw(at: CGPoint(x: 0, y: 0))
+            image = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+        }
         return image
     }
 }
